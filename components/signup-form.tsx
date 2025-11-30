@@ -16,6 +16,7 @@ import { signupUser } from "@/app/actions/auth";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { UserRole } from "@/global-types";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   success: false,
@@ -28,22 +29,25 @@ export function SignupForm({
   loginPath,
   showSocialLogin = true,
   role = "user",
+  redirectUrl = "/",
   ...props
 }: React.ComponentProps<"form"> & {
   loginPath: string;
   showSocialLogin?: boolean;
   role?: UserRole;
+  redirectUrl?: string;
 }) {
   const [state, action, isPending] = useActionState(signupUser, initialState);
+  const router = useRouter();
 
   useEffect(() => {
     if (state.success) {
       toast.success(state.message);
-      // Redirect or other logic could go here
+      router.push(redirectUrl);
     } else if (state.error) {
       toast.error(state.error);
     }
-  }, [state]);
+  }, [state, router, redirectUrl]);
 
   return (
     <form

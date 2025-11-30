@@ -16,6 +16,7 @@ export default function SignupPage() {
               loginPath="/auth/merchant/login"
               showSocialLogin={false}
               role="merchant"
+              redirectUrl="/auth/merchant/login"
             />
           </div>
         </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,18 +11,47 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useActionState } from "react";
+import { loginUser } from "@/app/actions/auth";
+import { toast } from "sonner";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+const initialState = {
+  success: false,
+  message: "",
+  error: "",
+};
 
 export function LoginForm({
   className,
   signupPath,
   showSocialLogin = true,
+  redirectUrl = "/",
   ...props
 }: React.ComponentProps<"form"> & {
   signupPath: string;
   showSocialLogin?: boolean;
+  redirectUrl?: string;
 }) {
+  const [state, action, isPending] = useActionState(loginUser, initialState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message);
+      router.push(redirectUrl);
+    } else if (state.error) {
+      toast.error(state.error);
+    }
+  }, [state, router, redirectUrl]);
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      action={action}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
@@ -30,7 +61,13 @@ export function LoginForm({
         </div>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+          />
         </Field>
         <Field>
           <div className="flex items-center">
@@ -42,10 +79,12 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" name="password" type="password" required />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Logging in..." : "Login"}
+          </Button>
         </Field>
         {showSocialLogin && (
           <>

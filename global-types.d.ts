@@ -9,6 +9,11 @@ export interface SignupPayload {
   Role: UserRole;
 }
 
+export interface LoginPayload {
+  Email: string;
+  Password: string;
+}
+
 export interface User {
   TenantID: string;
   Email: string;

@@ -13,7 +13,7 @@ export default function SignupPage() {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <SignupForm
-              loginPath="auth/merchant/login"
+              loginPath="/auth/merchant/login"
               showSocialLogin={false}
             />
           </div>

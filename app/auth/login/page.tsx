@@ -12,7 +12,7 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm signupPath="auth/merchant/signup" />
+            <LoginForm signupPath="/auth/signup" />
           </div>
         </div>
       </div>

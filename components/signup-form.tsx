@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,32 +11,96 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useActionState } from "react";
+import { signupUser } from "@/app/actions/auth";
+import { toast } from "sonner";
+import { useEffect } from "react";
+import { UserRole } from "@/global-types";
+
+const initialState = {
+  success: false,
+  message: "",
+  error: "",
+};
 
 export function SignupForm({
   className,
   loginPath,
   showSocialLogin = true,
+  role = "user",
   ...props
 }: React.ComponentProps<"form"> & {
   loginPath: string;
   showSocialLogin?: boolean;
+  role?: UserRole;
 }) {
+  const [state, action, isPending] = useActionState(signupUser, initialState);
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message);
+      // Redirect or other logic could go here
+    } else if (state.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      action={action}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
+      <input type="hidden" name="role" value={role} />
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Fill in the form below to create your account
+            Fill in the form below to create your{" "}
+            {role === "merchant" ? "merchant " : ""}account
           </p>
         </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field>
+            <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+            <Input
+              id="firstName"
+              name="firstName"
+              type="text"
+              placeholder="John"
+              required
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+            <Input
+              id="lastName"
+              name="lastName"
+              type="text"
+              placeholder="Doe"
+              required
+            />
+          </Field>
+        </div>
         <Field>
-          <FieldLabel htmlFor="name">Full Name</FieldLabel>
-          <Input id="name" type="text" placeholder="John Doe" required />
+          <FieldLabel htmlFor="phone">Phone</FieldLabel>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="+1234567890"
+            required
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+          />
           <FieldDescription>
             We&apos;ll use this to contact you. We will not share your email
             with anyone else.
@@ -42,18 +108,25 @@ export function SignupForm({
         </Field>
         <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
-          <Input id="password" type="password" required />
+          <Input id="password" name="password" type="password" required />
           <FieldDescription>
             Must be at least 8 characters long.
           </FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-          <Input id="confirm-password" type="password" required />
+          <Input
+            id="confirm-password"
+            name="confirmPassword"
+            type="password"
+            required
+          />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button type="submit">Create Account</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Creating Account..." : "Create Account"}
+          </Button>
         </Field>
         {showSocialLogin && (
           <>

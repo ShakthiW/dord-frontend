@@ -24,9 +24,37 @@ export interface User {
   IsActive: boolean;
 }
 
+export interface Tenant {
+  TenantID: string;
+  Name: string;
+  Slug: string;
+  OwnerID: number;
+  BusinessEmail: string;
+  BusinessPhone: string;
+  Description: string;
+  IsActive: boolean;
+  PlanType: string;
+  LogoURL: string | null;
+  BannerURL: string | null;
+  PrimaryColor: string | null;
+  SecondaryColor: string | null;
+}
+
+export interface MerchantSignupPayload {
+  name: string;
+  slug: string;
+  ownerId: string;
+  businessEmail: string;
+  businessPhone: string;
+  description: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+}
+
 export interface AuthResponse {
   success: boolean;
   message?: string;
-  data?: User;
+  data?: User | Tenant;
   error?: string;
 }

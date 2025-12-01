@@ -1,4 +1,4 @@
-import { SignupForm } from "@/components/signup-form";
+import { MerchantSignupForm } from "@/components/merchant-signup-form";
 import DordLogo from "@/components/dord-logo";
 
 export default function SignupPage() {
@@ -12,12 +12,7 @@ export default function SignupPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <SignupForm
-              loginPath="/auth/merchant/login"
-              showSocialLogin={false}
-              role="merchant"
-              redirectUrl="/auth/merchant/login"
-            />
+            <MerchantSignupForm redirectUrl="/admin/dashboard" />
           </div>
         </div>
       </div>

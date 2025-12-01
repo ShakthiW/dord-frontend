@@ -5,6 +5,7 @@ import {
   AuthResponse,
   UserRole,
   LoginPayload,
+  MerchantSignupPayload,
 } from "@/global-types";
 
 import { cookies } from "next/headers";
@@ -69,6 +70,101 @@ export async function loginUser(
     return {
       success: false,
       error: "An unexpected error occurred. Please try again later.",
+    };
+  }
+}
+
+import { sendMerchantRequestEmail } from "@/lib/nodemailer";
+
+export async function requestMerchantAccount(
+  prevState: any,
+  formData: FormData
+): Promise<AuthResponse> {
+  const name = formData.get("name") as string;
+  const businessEmail = formData.get("businessEmail") as string;
+  const businessPhone = formData.get("businessPhone") as string;
+  const description = formData.get("description") as string;
+
+  if (!name || !businessEmail) {
+    return {
+      success: false,
+      error: "Business Name and Email are required",
+    };
+  }
+
+  // Generate slug from name
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+  // Get token to extract ownerId
+  const cookieStore = await cookies();
+  const token = cookieStore.get("Authorization")?.value;
+
+  if (!token) {
+    return {
+      success: false,
+      error: "You must be logged in to request a merchant account",
+    };
+  }
+
+  // Simple JWT decode to get user details
+  let ownerId = "";
+  let contactName = "Unknown";
+  let contactEmail = "Unknown";
+  let contactPhone = "Unknown";
+
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+    const payload = JSON.parse(jsonPayload);
+
+    ownerId = payload.sub;
+    contactName = `${payload.first_name} ${payload.last_name}`;
+    contactEmail = payload.email;
+    contactPhone = payload.phone;
+  } catch (e) {
+    console.error("Failed to decode token", e);
+    return {
+      success: false,
+      error: "Invalid authentication token",
+    };
+  }
+
+  const payload: MerchantSignupPayload = {
+    name,
+    slug,
+    ownerId,
+    businessEmail,
+    businessPhone,
+    description,
+    contactName,
+    contactEmail,
+    contactPhone,
+  };
+
+  try {
+    await sendMerchantRequestEmail(payload);
+
+    return {
+      success: true,
+      message:
+        "Your request has been sent to support. We will contact you shortly.",
+    };
+  } catch (error) {
+    console.error("Request merchant account error:", error);
+    return {
+      success: false,
+      error: "Failed to send request. Please try again later.",
     };
   }
 }

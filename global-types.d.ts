@@ -16,6 +16,7 @@ export interface LoginPayload {
 
 export interface User {
   TenantID: string;
+  Slug?: string;
   Email: string;
   FirstName: string;
   LastName: string;

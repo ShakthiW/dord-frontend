@@ -9,6 +9,7 @@ import {
 } from "@/global-types";
 
 import { cookies } from "next/headers";
+import { getTenant } from "./tenant";
 
 export async function loginUser(
   prevState: any,
@@ -60,6 +61,7 @@ export async function loginUser(
 
     // Decode token to get tenant_id
     let tenantId = "";
+    let slug = "";
     try {
       const base64Url = data.token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -73,6 +75,13 @@ export async function loginUser(
       );
       const payload = JSON.parse(jsonPayload);
       tenantId = payload.tenant_id;
+
+      if (tenantId) {
+        const tenant = await getTenant(tenantId);
+        if (tenant) {
+          slug = tenant.slug || tenant.Slug;
+        }
+      }
     } catch (e) {
       console.error("Failed to decode token for tenant_id", e);
     }
@@ -80,7 +89,7 @@ export async function loginUser(
     return {
       success: true,
       message: "Login successful",
-      data: { ...data.user, TenantID: tenantId },
+      data: { ...data.user, TenantID: tenantId, Slug: slug },
     };
   } catch (error) {
     console.error("Login error:", error);

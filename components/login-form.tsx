@@ -40,8 +40,12 @@ export function LoginForm({
   useEffect(() => {
     if (state.success) {
       toast.success(state.message);
-      if (state.data?.TenantID) {
-        router.push(`/admin/dashboard/${state.data.TenantID}`);
+      if (state.data?.Slug) {
+        router.push(`/admin/dashboard/${state.data.Slug}`);
+      } else if (state.data?.TenantID) {
+        // Fallback to error page if slug is missing but tenant ID exists
+        // This shouldn't happen if the tenant exists and has a slug
+        router.push("/error");
       } else {
         router.push(redirectUrl);
       }

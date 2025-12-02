@@ -13,15 +13,66 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
+import { getTenant } from "@/app/actions/tenant";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("Authorization")?.value;
+
+  let user = {
+    name: "User",
+    email: "user@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  };
+  let tenant = {
+    name: "Company",
+    plan: "Free",
+    logo: null,
+  };
+
+  if (token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+      const payload = JSON.parse(jsonPayload);
+
+      user = {
+        name: `${payload.first_name} ${payload.last_name}`,
+        email: payload.email,
+        avatar: "/avatars/shadcn.jpg", // Placeholder or from payload if available
+      };
+
+      if (payload.tenant_id) {
+        const tenantData = await getTenant(payload.tenant_id);
+        if (tenantData) {
+          tenant = {
+            name: tenantData.name,
+            plan: tenantData.plan_type,
+            logo: tenantData.logo_url,
+          };
+        }
+      }
+    } catch (e) {
+      console.error("Failed to decode token or fetch tenant", e);
+    }
+  }
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={user} tenant={tenant} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

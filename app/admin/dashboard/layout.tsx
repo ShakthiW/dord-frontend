@@ -33,6 +33,7 @@ export default async function DashboardLayout({
     name: "Company",
     plan: "Free",
     logo: null,
+    slug: "",
   };
 
   if (token) {
@@ -62,6 +63,7 @@ export default async function DashboardLayout({
             name: tenantData.name,
             plan: tenantData.plan_type,
             logo: tenantData.logo_url,
+            slug: tenantData.slug,
           };
         }
       }

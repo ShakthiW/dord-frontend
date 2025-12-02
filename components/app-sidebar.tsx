@@ -1,16 +1,6 @@
 "use client";
 
-import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { Frame, GalleryVerticalEnd, Map, PieChart } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -23,7 +13,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { title } from "process";
 
 // This is sample data.
 const data = {
@@ -41,104 +30,129 @@ const data = {
   ],
   navMain: [
     {
-      title: "Visualizations",
+      title: "General",
       url: "#",
-      icon: SquareTerminal,
       isActive: true,
       items: [
         {
           title: "Dashboard",
-          url: "#",
-        },
-        {
-          title: "Reports",
-          url: "#",
+          url: "",
         },
         {
           title: "Analytics",
-          url: "#",
+          url: "analytics",
         },
       ],
     },
     {
       title: "Inventory",
-      url: "#",
-      icon: Bot,
+      url: "/inventory",
+      isActive: true,
       items: [
         {
           title: "Products",
-          url: "#",
+          url: "/inventory/products",
+        },
+        {
+          title: "Suppliers",
+          url: "/inventory/suppliers",
         },
         {
           title: "Categories",
-          url: "#",
-        },
-        {
-          title: "Brands",
-          url: "#",
+          url: "/inventory/categories",
         },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
+      title: "Orders & Fulfillment",
+      url: "/orders",
+      isActive: true,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "Orders",
+          url: "/orders",
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: "Abandoned Carts",
+          url: "/abandoned-carts",
         },
         {
-          title: "Tutorials",
-          url: "#",
+          title: "Orders History",
+          url: "/orders-history",
         },
         {
-          title: "Changelog",
-          url: "#",
+          title: "Conversations",
+          url: "/conversations",
         },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
+      title: "Payments",
+      url: "/payments",
+      isActive: true,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Pending Payment",
+          url: "/payments",
         },
         {
-          title: "Team",
-          url: "#",
+          title: "Verified Payments",
+          url: "/payments/verified-payments",
         },
         {
-          title: "Billing",
-          url: "#",
+          title: "Refunds/Chargebacks",
+          url: "/payments/refunds",
+        },
+      ],
+    },
+    {
+      title: "Customers",
+      url: "/customers",
+      isActive: true,
+      items: [
+        {
+          title: "Customer List",
+          url: "/customers",
         },
         {
-          title: "Limits",
-          url: "#",
+          title: "Segments",
+          url: "/customers/segments",
+        },
+      ],
+    },
+    {
+      title: "Storefront & Channels",
+      url: "/storefront",
+      isActive: true,
+      items: [
+        {
+          title: "Store Settings",
+          url: "/storefront/store-settings",
+        },
+        {
+          title: "Catalogue Design",
+          url: "/storefront/catalogue-design",
+        },
+        {
+          title: "Manage Channels",
+          url: "/channels",
         },
       ],
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Agent Settings",
       url: "#",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
+      name: "AI Sales Insights",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Test Automations",
       url: "#",
       icon: Map,
     },
@@ -151,8 +165,17 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: { name: string; email: string; avatar: string };
-  tenant: { name: string; plan: string; logo: any };
+  tenant: { name: string; plan: string; logo: any; slug: string };
 }) {
+  const baseUrl = `/admin/dashboard/${tenant.slug}`;
+
+  const transformUrl = (url: string) => {
+    if (!url) return baseUrl;
+    if (url === "#") return url;
+    if (url.startsWith("/")) return `${baseUrl}${url}`;
+    return `${baseUrl}/${url}`;
+  };
+
   const dynamicData = {
     ...data,
     user: user,
@@ -163,6 +186,17 @@ export function AppSidebar({
         plan: tenant.plan,
       },
     ],
+    navMain: data.navMain.map((item) => ({
+      ...item,
+      items: item.items.map((subItem) => ({
+        ...subItem,
+        url: transformUrl(subItem.url),
+      })),
+    })),
+    projects: data.projects.map((item) => ({
+      ...item,
+      url: transformUrl(item.url),
+    })),
   };
 
   return (
@@ -171,8 +205,8 @@ export function AppSidebar({
         <TeamSwitcher teams={dynamicData.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={dynamicData.navMain} />
+        <NavProjects projects={dynamicData.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={dynamicData.user} />

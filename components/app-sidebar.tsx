@@ -88,11 +88,11 @@ const data = {
         },
         {
           title: "Abandoned Carts",
-          url: "/abandoned-carts",
+          url: "/orders/abandoned-carts",
         },
         {
           title: "Orders History",
-          url: "/orders-history",
+          url: "/orders/history",
         },
         {
           title: "Conversations",
@@ -108,11 +108,11 @@ const data = {
       items: [
         {
           title: "Pending Payment",
-          url: "/payments",
+          url: "/payments/pending",
         },
         {
           title: "Verified Payments",
-          url: "/payments/verified-payments",
+          url: "/payments/verified",
         },
         {
           title: "Refunds/Chargebacks",
@@ -138,7 +138,7 @@ const data = {
     },
     {
       title: "Storefront & Channels",
-      url: "/storefront",
+      url: "#",
       icon: Store,
       isActive: true,
       items: [

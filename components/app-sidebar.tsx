@@ -1,6 +1,17 @@
 "use client";
 
-import { Frame, GalleryVerticalEnd, Map, PieChart } from "lucide-react";
+import {
+  CreditCard,
+  Frame,
+  GalleryVerticalEnd,
+  LayoutDashboard,
+  Map,
+  Package,
+  PieChart,
+  ShoppingBag,
+  Store,
+  Users,
+} from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -32,6 +43,7 @@ const data = {
     {
       title: "General",
       url: "#",
+      icon: LayoutDashboard,
       isActive: true,
       items: [
         {
@@ -46,7 +58,8 @@ const data = {
     },
     {
       title: "Inventory",
-      url: "/inventory",
+      url: "#",
+      icon: Package,
       isActive: true,
       items: [
         {
@@ -65,7 +78,8 @@ const data = {
     },
     {
       title: "Orders & Fulfillment",
-      url: "/orders",
+      url: "#",
+      icon: ShoppingBag,
       isActive: true,
       items: [
         {
@@ -88,7 +102,8 @@ const data = {
     },
     {
       title: "Payments",
-      url: "/payments",
+      url: "#",
+      icon: CreditCard,
       isActive: true,
       items: [
         {
@@ -108,6 +123,7 @@ const data = {
     {
       title: "Customers",
       url: "/customers",
+      icon: Users,
       isActive: true,
       items: [
         {
@@ -123,6 +139,7 @@ const data = {
     {
       title: "Storefront & Channels",
       url: "/storefront",
+      icon: Store,
       isActive: true,
       items: [
         {

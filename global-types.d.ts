@@ -59,3 +59,11 @@ export interface AuthResponse {
   data?: User | Tenant;
   error?: string;
 }
+
+export interface Product {
+  ID: number;
+  Name: string;
+  Description: string;
+  Price: number;
+  Stock: number;
+}

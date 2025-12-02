@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { decodeJwt } from "@/lib/utils";
 import { Product } from "@/global-types";
 import { ProductCard } from "@/components/products/product-card";
+import { CreateProductDialog } from "@/components/products/create-product-dialog";
 
 async function getProducts() {
   const cookieStore = await cookies();
@@ -50,7 +51,10 @@ export default async function ProductsPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <CreateProductDialog />
+      </div>
       {error && (
         <div className="p-4 mb-4 text-red-700 bg-red-100 rounded-md">
           Error: {error}

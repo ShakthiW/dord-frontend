@@ -67,3 +67,19 @@ export interface Product {
   Price: number;
   Stock: number;
 }
+
+export interface CreateProductPayload {
+  name: string;
+  description: string;
+  category: string;
+  rating: number;
+  numberOfReviews: number;
+  price: number;
+  stock: number;
+}
+
+export interface Category {
+  ID: number;
+  Name: string;
+  Description: string;
+}

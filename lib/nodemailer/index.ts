@@ -36,3 +36,39 @@ export const sendMerchantRequestEmail = async (
 
   await transporter.sendMail(mailOptions);
 };
+
+export const sendCategoryRequestEmail = async (data: {
+  categoryName: string;
+  categoryDescription: string;
+  note: string;
+  requesterName: string;
+  requesterEmail: string;
+  requesterPhone: string;
+  tenantId: string;
+}): Promise<void> => {
+  // Import template dynamically or ensure it's imported at top
+  const { CATEGORY_REQUEST_TEMPLATE } = await import(
+    "@/lib/nodemailer/templates"
+  );
+
+  const htmlTemplate = CATEGORY_REQUEST_TEMPLATE.replace(
+    "{{categoryName}}",
+    data.categoryName
+  )
+    .replace("{{categoryDescription}}", data.categoryDescription)
+    .replace("{{note}}", data.note)
+    .replace("{{requesterName}}", data.requesterName)
+    .replace("{{requesterEmail}}", data.requesterEmail)
+    .replace("{{requesterPhone}}", data.requesterPhone)
+    .replace("{{tenantId}}", data.tenantId);
+
+  const mailOptions = {
+    from: `"Dord Platform" <${process.env.NODEMAILER_EMAIL}>`,
+    to: process.env.DORD_SUPPORT_EMAIL,
+    subject: `New Category Request: ${data.categoryName}`,
+    text: `New category request: ${data.categoryName} by ${data.requesterName}`,
+    html: htmlTemplate,
+  };
+
+  await transporter.sendMail(mailOptions);
+};

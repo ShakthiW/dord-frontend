@@ -98,3 +98,14 @@ export interface CreateVariantPayload {
   PriceOverride: number;
   Stock: number;
 }
+
+export interface CreateCategoryPayload {
+  Name: string;
+  Description: string;
+}
+
+export interface RequestCategoryPayload {
+  Name: string;
+  Description: string;
+  Note: string;
+}

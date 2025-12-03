@@ -99,11 +99,6 @@ export interface CreateVariantPayload {
   Stock: number;
 }
 
-export interface CreateCategoryPayload {
-  Name: string;
-  Description: string;
-}
-
 export interface RequestCategoryPayload {
   Name: string;
   Description: string;

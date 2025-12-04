@@ -115,8 +115,12 @@ const data = {
           url: "/payments/verified",
         },
         {
-          title: "Refunds/Chargebacks",
+          title: "Refunds & Chargebacks",
           url: "/payments/refunds",
+        },
+        {
+          title: "Payments History",
+          url: "/payments/history",
         },
       ],
     },

@@ -138,3 +138,22 @@ export interface AbandonedCart {
   user_email: string;
   user_phone: string;
 }
+
+export interface Payment {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string | null;
+  TenantID: string;
+  OrderID: number;
+  UserID: number;
+  PaymentMethod: string;
+  PaymentProvider: string;
+  TransactionID: string;
+  Amount: number;
+  Currency: string;
+  Status: string;
+  PaymentDate: string;
+  ReceiptURL: string;
+  Notes: string;
+}

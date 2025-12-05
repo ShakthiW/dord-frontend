@@ -157,3 +157,43 @@ export interface Payment {
   ReceiptURL: string;
   Notes: string;
 }
+
+export interface TenantSettings {
+  tenant_id: string;
+  name: string;
+  slug: string;
+  owner_id: number;
+  business_email: string;
+  business_phone: string;
+  description: string;
+  plan_type: string;
+  logo_url: string;
+  banner_url: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  business_address: {
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  is_active: boolean;
+  // Bank details (optional as they are not in the current JSON response)
+  bank_name?: string;
+  account_holder_name?: string;
+  branch_name?: string;
+  account_number?: string;
+}
+
+export interface BankAccount {
+  ID: number;
+  TenantID: string;
+  BankName: string;
+  Branch: string;
+  AccountHolder: string;
+  AccountNumber: string;
+  IsDefault: boolean;
+}

@@ -111,7 +111,7 @@ const data = {
           url: "/payments/pending",
         },
         {
-          title: "Verified Payments",
+          title: "Reviewed Payments",
           url: "/payments/verified",
         },
         {

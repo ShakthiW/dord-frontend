@@ -1,8 +1,8 @@
-import { getReviewedPayments } from "@/app/actions/payments";
+import { getPayments } from "@/app/actions/payments";
 import { PaymentsTable } from "@/components/payments/payments-table";
 
-export default async function VerifiedPaymentsPage() {
-  const { payments, error } = await getReviewedPayments();
+export default async function PaymentsHistoryPage() {
+  const { payments, error } = await getPayments();
 
   if (error) {
     return <div className="p-6 text-red-500">{error}</div>;
@@ -11,7 +11,7 @@ export default async function VerifiedPaymentsPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Reviewed Payments</h1>
+        <h1 className="text-2xl font-bold">Payments History</h1>
       </div>
       <PaymentsTable payments={payments} />
     </div>

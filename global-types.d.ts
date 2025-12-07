@@ -62,10 +62,20 @@ export interface AuthResponse {
 
 export interface Product {
   ID: number;
+  CreatedAt?: string;
+  UpdatedAt?: string;
+  DeletedAt?: string | null;
+  TenantID?: string;
   Name: string;
   Description: string;
+  Images?: string[] | null;
+  Category?: string;
+  Rating?: number;
+  NumberOfReviews?: number;
   Price: number;
   Stock: number;
+  IsActive?: boolean;
+  IsFeatured?: boolean;
 }
 
 export interface CreateProductPayload {
@@ -103,4 +113,97 @@ export interface RequestCategoryPayload {
   Name: string;
   Description: string;
   Note: string;
+}
+
+export interface Address {
+  address1: string;
+  address2: string;
+  city: string;
+  zip: string;
+  country: string;
+}
+
+export interface Order {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string | null;
+  TenantID: string;
+  UserID: number;
+  CartID: number;
+  TotalAmount: number;
+  Status: string;
+  PaymentMethod: string;
+  ShippingAddress: Address;
+  BillingAddress: Address;
+}
+
+export interface AbandonedCart {
+  cart_id: number;
+  user_id: number;
+  total_price: number;
+  updated_at: string;
+  user_first_name: string;
+  user_last_name: string;
+  user_email: string;
+  user_phone: string;
+}
+
+export interface Payment {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string | null;
+  TenantID: string;
+  OrderID: number;
+  UserID: number;
+  PaymentMethod: string;
+  PaymentProvider: string;
+  TransactionID: string;
+  Amount: number;
+  Currency: string;
+  Status: string;
+  PaymentDate: string;
+  ReceiptURL: string;
+  Notes: string;
+}
+
+export interface TenantSettings {
+  tenant_id: string;
+  name: string;
+  slug: string;
+  owner_id: number;
+  business_email: string;
+  business_phone: string;
+  description: string;
+  plan_type: string;
+  logo_url: string;
+  banner_url: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  business_address: {
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  is_active: boolean;
+  // Bank details (optional as they are not in the current JSON response)
+  bank_name?: string;
+  account_holder_name?: string;
+  branch_name?: string;
+  account_number?: string;
+}
+
+export interface BankAccount {
+  ID: number;
+  TenantID: string;
+  BankName: string;
+  Branch: string;
+  AccountHolder: string;
+  AccountNumber: string;
+  IsDefault: boolean;
 }

@@ -107,16 +107,20 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Pending Payment",
+          title: "Pending Payments",
           url: "/payments/pending",
         },
         {
-          title: "Verified Payments",
+          title: "Reviewed Payments",
           url: "/payments/verified",
         },
         {
-          title: "Refunds/Chargebacks",
+          title: "Refunds & Chargebacks",
           url: "/payments/refunds",
+        },
+        {
+          title: "Payments History",
+          url: "/payments/history",
         },
       ],
     },
@@ -131,8 +135,8 @@ const data = {
           url: "/customers",
         },
         {
-          title: "Segments",
-          url: "/customers/segments",
+          title: "Contact Us Messages",
+          url: "/customers/contact",
         },
       ],
     },

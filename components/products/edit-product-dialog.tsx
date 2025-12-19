@@ -33,6 +33,7 @@ import { updateProduct } from "@/app/actions/products";
 import { getCategories } from "@/app/actions/categories";
 import { toast } from "sonner";
 import { Category, Product, UpdateProductPayload } from "@/global-types";
+import { ProductImageManager } from "@/components/products/product-image-manager";
 
 interface EditProductDialogProps {
   product: Product;
@@ -121,6 +122,12 @@ export function EditProductDialog({ product }: EditProductDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="text-right">Images</Label>
+            <div className="col-span-3">
+              <ProductImageManager product={product} />
+            </div>
+          </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="edit-name" className="text-right">
               Name

@@ -115,6 +115,18 @@ export interface CreateProductPayload {
   }[];
 }
 
+export interface ImagePayload {
+  url: string;
+  is_main: boolean;
+  image_description?: string;
+}
+
+export interface UpdateImagePayload {
+  url?: string;
+  is_main?: boolean;
+  image_description?: string;
+}
+
 export interface UpdateProductPayload {
   Name?: string;
   Description?: string;

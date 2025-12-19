@@ -108,11 +108,22 @@ export interface CreateProductPayload {
   price: number;
   stock: number;
 
-  images: {
-    URL: string;
-    IsMain: boolean;
-    ImageDescription?: string;
+  Images: {
+    url: string;
+    is_main: boolean;
+    image_description?: string;
   }[];
+}
+
+export interface UpdateProductPayload {
+  Name?: string;
+  Description?: string;
+  Category?: string;
+  Rating?: number;
+  NumberOfReviews?: number;
+  Price?: number;
+  Stock?: number;
+  IsFeatured?: boolean;
 }
 
 export interface Category {

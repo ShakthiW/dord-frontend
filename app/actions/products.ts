@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { decodeJwt } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
-import { CreateProductPayload } from "@/global-types";
+// Removed duplicate import
 
 export async function createProduct(data: CreateProductPayload) {
   const cookieStore = await cookies();
@@ -121,7 +121,11 @@ export async function getFeaturedProducts() {
   return res.json();
 }
 
-export async function updateProduct(id: number, data: any) {
+import { CreateProductPayload, UpdateProductPayload } from "@/global-types";
+
+// ... (existing createProduct code)
+
+export async function updateProduct(id: number, data: UpdateProductPayload) {
   const cookieStore = await cookies();
   const authCookie = cookieStore.get("Authorization");
   const token = authCookie?.value;
@@ -138,8 +142,6 @@ export async function updateProduct(id: number, data: any) {
   }
 
   try {
-    // Note: User provided localhost:8080 for PATCH, but we use PRODUCTS_SERVICE_URL (likely 3003)
-    // If this fails, we might need to adjust the URL or port.
     const res = await fetch(
       `${process.env.PRODUCTS_SERVICE_URL}/api/v1/products/id/${id}/update`,
       {
@@ -168,6 +170,49 @@ export async function updateProduct(id: number, data: any) {
     );
     revalidatePath("/admin/dashboard/[slug]/inventory/products", "page");
     return { success: true, data: resData };
+  } catch (e) {
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
+export async function deleteProduct(id: number) {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("Authorization");
+  const token = authCookie?.value;
+
+  if (!token) {
+    return { success: false, error: "No authorization token found" };
+  }
+
+  const decoded = decodeJwt(token);
+  const tenantId = decoded?.tenant_id;
+
+  if (!tenantId) {
+    return { success: false, error: "Invalid token: missing tenant_id" };
+  }
+
+  try {
+    const res = await fetch(
+      `${process.env.PRODUCTS_SERVICE_URL}/api/v1/products/id/${id}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          "Tenant-ID": tenantId,
+          Cookie: `Authorization=${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      return {
+        success: false,
+        error: errorData.message || "Failed to delete product",
+      };
+    }
+
+    revalidatePath("/admin/dashboard/[slug]/inventory/products", "page");
+    return { success: true };
   } catch (e) {
     return { success: false, error: "An unexpected error occurred" };
   }

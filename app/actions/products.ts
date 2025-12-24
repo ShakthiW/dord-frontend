@@ -3,6 +3,13 @@
 import { cookies } from "next/headers";
 import { decodeJwt } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import {
+  CreateProductPayload,
+  UpdateProductPayload,
+  ImagePayload,
+  UpdateImagePayload,
+} from "@/global-types";
+import { bucket } from "@/lib/firebase-admin";
 
 // Removed duplicate import
 
@@ -121,8 +128,6 @@ export async function getFeaturedProducts() {
   return res.json();
 }
 
-import { CreateProductPayload, UpdateProductPayload } from "@/global-types";
-
 // ... (existing createProduct code)
 
 export async function updateProduct(id: number, data: UpdateProductPayload) {
@@ -217,9 +222,6 @@ export async function deleteProduct(id: number) {
     return { success: false, error: "An unexpected error occurred" };
   }
 }
-
-import { bucket } from "@/lib/firebase-admin";
-import { ImagePayload, UpdateImagePayload } from "@/global-types";
 
 export async function addProductImage(id: number, data: ImagePayload) {
   const cookieStore = await cookies();
